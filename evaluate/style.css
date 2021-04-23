@@ -1,0 +1,13 @@
+body {
+	font-size: 1.1em;
+	font-family: 'Open Sans', sans-serif;
+}
+
+code {
+	font-family: 'Open Sans', sans-serif;
+	margin-right: 1em;
+}
+.error-message {
+	font-style: italic;
+	color: red;
+}

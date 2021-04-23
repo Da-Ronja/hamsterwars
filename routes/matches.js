@@ -57,6 +57,19 @@ router.post('/', async (req, res) => {
 
 // DELETE //matches/:id
 router.delete('/:id', async (req, res) => {
+	const id = req.params.id
+	const matchIdRef = await db.collection('matches').doc(id).get();
+
+	if (!id) {
+		res.status(404).send('Is not a id')
+		return
+	} else if(!matchIdRef.exists) {
+        res.status(404).send(`Match with id: "${id}" does not exist`)
+        return
+    }
+
+ 	await db.collection('matches').doc(id).delete()
+	res.status(200).send(`Match with id: "${id}" is removed`)
 })
 
 module.exports = router
