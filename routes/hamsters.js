@@ -66,36 +66,24 @@ router.get('/:id', async (req, res) => {
 
 //POST /hamsters
 router.post('/', async (req, res) => {
-    const object = req.body;
+    const object =  req.body
+
+	console.log(1.1, object);
 
     if( !isHamstersObject(object)) {
+		console.log(1.2, object);
         res.status(400).send("Wrong structure on the object")
         return
     };
 
+	//Skapa en funktion som håller och lägger till (vinst, förlust och antal matcher)
+
+	console.log(2.1, object);
+
     const hamsterRef = await db.collection('hamster').add(object);
+	console.log(3.1, object);
     res.status(200).send(hamsterRef.id);
 });
-
-//Functions
-function isHamstersObject(maybeObject) {
-    console.log(1)
-    if (!maybeObject) {
-        console.log(2)
-        return false;
-    } else if (!maybeObject.name || !maybeObject.favFood || !maybeObject.loves || !maybeObject.imgName) {
-        console.log(3)
-        return false;
-    } else if (!isPositiveNumber(maybeObject.wins) || !isPositiveNumber(maybeObject.defeats) || !isPositiveNumber(maybeObject.games) || !isPositiveNumber(maybeObject.age)) {
-        console.log(4)
-        return false;
-    }
-    console.log(5)
-    return true;
-}
-function isPositiveNumber(x) {
-    return (typeof x) == 'number' && x >= 0;
-}
 
 //PUT /hamsters/:id
 router.put("/:id", async (req, res) => {
@@ -124,56 +112,6 @@ router.put("/:id", async (req, res) => {
 	res.send("Hamster changed.");
 });
 
-function checkInput(obj) {
-	for (const prop in obj) {
-		if (
-			prop === "name" || prop === "age" ||
-			prop === "favFood" || prop === "loves" ||
-			prop === "imgName" || prop === "wins" ||
-			prop === "defeats" || prop === "games"
-		) {
-			console.log(1);
-			continue
-		} else {
-			console.log(2);
-			return false;
-		}
-	}
-
-	for (const prop in obj) {
-		if (prop === "name" && typeof obj[prop] !== "string") {
-			console.log(3);
-			return false;
-		} else if (prop === "age" && typeof obj[prop] !== "number") {
-			console.log(4);
-			return false;
-		} else if (prop === "favFood" && typeof obj[prop] !== "string") {
-			console.log(5);
-			return false;
-		} else if (prop === "loves" && typeof obj[prop] !== "string") {
-			console.log(6);
-			return false;
-		} else if (prop === "imgName" && typeof obj[prop] !== "string") {
-			console.log(7);
-			return false;
-		} else if (prop === "wins" && typeof obj[prop] !== "number") {
-			console.log(8);
-			return false;
-		} else if (prop === "defeats" && typeof obj[prop] !== "number") {
-			console.log(9);
-			return false;
-		} else if (prop === "games" && typeof obj[prop] !== "number") {
-			console.log(10);
-			return false;
-		} else {
-			console.log(11);
-			continue
-		}
-	}
-	console.log(1);
-	return true;
-}
-
 //DELETE /hamsters/:id
 router.delete('/:id', async (req, res) => {
 	const id = req.params.id
@@ -190,5 +128,91 @@ router.delete('/:id', async (req, res) => {
 	await db.collection('hamster').doc(id).delete()
 	res.sendStatus(200)
 })
+
+
+//Functions
+function isPositiveNumber(x) {
+    return (typeof x) == 'number' && x >= 0;
+};
+
+function isASting(x) {
+    return (typeof x) == 'string';
+};
+
+function isHamstersObject(obj) {
+    console.log(1, obj)
+    if (!obj) {
+        console.log(2)
+        return false;
+    } else if (!isASting(obj.name) || !isASting(obj.favFood)) {
+        console.log(3)
+        return false;
+    } else if (!isASting(obj.loves) || !isASting(obj.imgName)) {
+        console.log(3)
+        return false;
+    } else if (!isPositiveNumber(obj.age) || !isPositiveNumber(obj.defeats)) {
+        console.log(3)
+        return false;
+    } else if (!isPositiveNumber(obj.games) || !isPositiveNumber(obj.age)) {
+        console.log(4)
+        return false;
+    }
+    console.log(5, obj)
+    return true;
+}
+
+function checkInput(obj) {
+	console.log(obj);
+	for (const prop in obj) {
+		if (
+			prop === "name" || prop === "age" ||
+			prop === "favFood" || prop === "loves" ||
+			prop === "imgName" || prop === "wins" ||
+			prop === "defeats" || prop === "games"
+		) {
+			console.log(1);
+			continue
+		} else {
+			console.log(2);
+			return false;
+		}
+	}
+
+	for (const prop in obj) {
+		if (prop === "name" && !isASting(obj[prop])) {
+			console.log(3);
+			return false;
+		} else if (prop === "age" && !isPositiveNumber(obj[prop])) {
+			console.log(4);
+			return false;
+		} else if (prop === "favFood" && !isASting(obj[prop])) {
+			console.log(5);
+			return false;
+		} else if (prop === "loves" && !isASting(obj[prop])) {
+			console.log(6);
+			return false;
+		} else if (prop === "imgName" && !isASting(obj[prop])) {
+			console.log(7);
+			return false;
+		} else if (prop === "wins" && !isPositiveNumber(obj[prop])) {
+			console.log(8);
+			return false;
+		} else if (prop === "defeats" && !isPositiveNumber(obj[prop])) {
+			console.log(9);
+			return false;
+		} else if (prop === "games"  && !isPositiveNumber(obj[prop])) {
+			console.log(10);
+			return false;
+		} else {
+			console.log(11);
+			continue
+		}
+	}
+	console.log(1);
+	return true;
+}
+
+module.exports = router
+
 
 module.exports = router
