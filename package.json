@@ -11,7 +11,8 @@
     "API",
     "Node",
     "Express",
-    "Firestore"
+    "Firestore",
+	"HEROKU"
   ],
   "author": "Silvia Alvarez",
   "license": "ISC",
