@@ -2,13 +2,14 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const path = require('path')
+
 const hamsters = require('./routes/hamsters.js')
 const matches = require('./routes/matches.js')
 const matchWinners = require('./routes/matchWinners.js')
 const winners = require('./routes/winners.js')
 const losers = require('./routes/losers.js')
 
-const PORT = 1357
+const PORT = process.env.PORT || 1357
 const staticFolder1 = path.join(__dirname, 'public')
 const staticFolder2 = path.join(__dirname, 'img/hamsters')
 

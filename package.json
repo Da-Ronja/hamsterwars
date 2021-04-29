@@ -4,7 +4,7 @@
   "description": "Back end assignment REST API with Node.js, Express och Firestore",
   "main": "index.js",
   "scripts": {
-    "start": "npx http-server ./evaluate/"
+    "start": "node server.js"
   },
   "keywords": [
     "REST",
