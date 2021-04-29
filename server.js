@@ -4,9 +4,9 @@ const cors = require('cors')
 const path = require('path')
 const hamsters = require('./routes/hamsters.js')
 const matches = require('./routes/matches.js')
-//const matchWinners = require('./routes/matchWinners.js')
-//const winners = require('./routes/winners.js')
-//const losers = require('./routes/losers.js')
+const matchWinners = require('./routes/matchWinners.js')
+const winners = require('./routes/winners.js')
+const losers = require('./routes/losers.js')
 
 const PORT = 1357
 const staticFolder1 = path.join(__dirname, 'public')
@@ -32,9 +32,9 @@ app.get('/', (req, res) => {
 // REST API for /hamsters
 app.use('/hamsters', hamsters)
 app.use('/matches', matches)
-//app.use('/matchWinners', matchWinners)
-//app.use('/winners', winners)
-//app.use('/losers', losers)
+app.use('/matchWinners', matchWinners)
+app.use('/winners', winners)
+app.use('/losers', losers)
 
 
 // Start server

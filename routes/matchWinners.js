@@ -4,25 +4,23 @@ const router = express.Router()
 const getDatabase = require('../database.js')
 const db = getDatabase()
 
+const { makeArray } = require('./func.js');
+
 // GET /matchWinners/:id
+//http://localhost:1357//matchWinners/:id
 router.get('/:id', async (req, res) => {
-	const matchesRef = db.collection('matches')
-	const snapshot = await matchesRef.where('winnerId', '==', req.params.id).get();
-	let allMatches = [];
+	const matchesRef = db.collection('matches');
+	let allMatches
 
-	//If  !object || !id
-	 if (snapshot.empty) {
-		res.status(404).send('There are no winners here!')
-  		return;
+	try {
+		const snapShot = await matchesRef.where('winnerId', '==', req.params.id).get();
+
+		allMatches = makeArray(snapShot, res)
+
+		res.status(200).send(allMatches);
+	} catch (error) {
+		res.status(500).send(error.message)
 	}
-
-	snapshot.forEach(doc => {
-		const data = doc.data();
-		data.id = doc.id;
-		allMatches.push(data);
-	});
-	res.status(200).send(allMatches);
-
 });
 
 module.exports = router

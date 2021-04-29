@@ -4,72 +4,90 @@ const router = express.Router()
 const getDatabase = require('../database.js')
 const db = getDatabase()
 
+const { makeArray } = require('./func.js');
+
 // GET /matches
+//http://localhost:1357/matches
+
 router.get('/', async (req, res) => {
 	const matchesRef = db.collection('matches')
-	const snapShot = await matchesRef.get()
+	let allMatches
 
-	console.log(1, snapShot.empty);
+	try {
+		const snapShot = await matchesRef.get()
+		allMatches = makeArray(snapShot)
 
-	if (snapShot.empty) {
-		console.log(2, snapShot.empty);
-		res.status(404).send('There are no hamsters here!')
-		return;
-	};
-
-	let allMatches = [];
-	snapShot.forEach( doc => {
-		const data = doc.data();
-		console.log(2.1, data);
-		data.id = doc.id;
-		allMatches.push(data);
-	});
-	console.log(3, allMatches);
-	res.status(200).send(allMatches);
+		res.status(200).send(allMatches);
+	} catch (error) {
+		res.status(500).send(error.message)
+	}
 });
 
+
 // GET /matches/:id
+//http://localhost:1357/matches
 router.get('/:id', async (req, res) => {
     const id = req.params.id;
-    const matchRef = await db.collection('matches').doc(id).get();
-	const data = matchRef.data();
-	data.id = matchRef.id
 
-    if(!matchRef.exists) {
-        res.status(404).send(`Match with id: "${id}" does not exist`)
-        return
-    }
+	try {
+		const matchRef = await db.collection('matches').doc(id).get();
 
-    res.status(200).send(data);
-})
+		if(!matchRef.exists) {
+	        res.status(404).send(`Match with id: "${id}" does not exist`)
+	        return
+	    }
+
+		const data = matchRef.data();
+		data.id = matchRef.id
+
+	    res.status(200).send(data);
+	} catch (error) {
+		res.status(500).send(error.message)
+	}
+});
 
 // POST /matches
+//http://localhost:1357/matches
 router.post('/', async (req, res) => {
 	const object = req.body;
 
-	if(!object || !object.winnerId || !object.loserId) {
-		res.status(400).send('Ops! Wrong object structur');
-		return
+	try {
+		if(!object || !object.winnerId || !object.loserId) {
+			res.status(400).send('Ops! Wrong object structur');
+			return
+		}
+
+		const matchRef = await db.collection('matches').add(object);
+
+		objectId = { id: matchRef.id }
+
+		res.status(200).send(objectId);
+	} catch (error) {
+		res.status(500).send(error.message)
 	}
-	const matchRef = await db.collection('matches').add(object);
-	res.status(200).send(matchRef.id);
 });
 
 // DELETE //matches/:id
+//http://localhost:1357/matches
 router.delete('/:id', async (req, res) => {
 	const id = req.params.id
-	const matchIdRef = await db.collection('matches').doc(id).get();
 
-	if (!id) {
-		res.status(404).send('Is not a id')
-		return
-	} else if(!matchIdRef.exists) {
-        res.status(404).send(`Match with id: "${id}" does not exist`)
-        return
-    }
+	try {
+		const matchIdRef = await db.collection('matches').doc(id).get();
 
- 	await db.collection('matches').doc(id).delete()
-	res.status(200).send(`Match with id: "${id}" is removed`)
-})
+		if (!id) {
+			res.status(404).send('Is not a id')
+			return
+		} else if(!matchIdRef.exists) {
+	        res.status(404).send(`Match with id: "${id}" does not exist`)
+	        return
+	    }
+
+	 	await db.collection('matches').doc(id).delete()
+		res.status(200).send(`Match with id: "${id}" is removed`)
+	} catch (error) {
+		res.status(500).send(error.message)
+	}
+});
 
 module.exports = router
