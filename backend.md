@@ -96,3 +96,15 @@ För *godkänt* krävs
 
 För *väl godkänt* krävs dessutom
 + ditt API implementerar VG-nivån
+
+
+---
+## Inlämning
+Du ska lämna in på ITHS distans: ditt repo och länkar till GitHub och din publicerade app.
++ ladda upp repot som en zip-fil
+
+Exempel - så här ska du skriva länkarna:
+```
+GitHub: https://github.com/iths-sthm-feu20-effektiv/hamsterwars-assignment
+Publicerad: https://my-hamsterswars-submission.herokuapp.com
+```

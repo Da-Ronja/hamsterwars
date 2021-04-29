@@ -15,6 +15,7 @@ function makeArray(input, res) {
 	return items
 }
 
+
 function isASting(x) {
     return (typeof x) == 'string';
 };

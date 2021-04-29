@@ -8,7 +8,8 @@ const { makeArray,
 	isHamstersObject,
 	isASting,
 	isPositiveNumber,
-	checkInput } = require('./func.js');
+	checkInput
+} = require('./func.js');
 
 // GET all hamsters
 //http://localhost:1357/hamsters
@@ -26,25 +27,32 @@ router.get('/', async (req, res) => {
 	}
 });
 
-
 //GET random hamsters
-//http://localhost:7777/hamsters/random
+//http://localhost:1357/hamsters/random
 router.get('/random', async (req, res) => {
     const hamstersRef = db.collection('hamsters')
-	let randomHamster
+    let items = []
 
-	try {
-		const snapShot = await hamstersRef.get()
-		randomHamster = makeArray(snapShot)
+    try {
+        const snapshot = await hamstersRef.get()
+        if (snapshot.empty) {
+            res.status(404).send('There are no hamsters here!');
+            return
+        }
 
-	    let randomIndex = Math.floor(Math.random() * randomHamster.length);
+        snapshot.forEach(doc => {
+            const data = doc.data()
+            data.id = doc.id;
+            items.push(data)
+        });
 
-	    res.status(200).send(randomHamster[randomIndex]);
-	} catch (error) {
-		res.status(500).send(error.message)
-	}
+        let randomIndex = Math.floor(Math.random() * items.length);
+        res.status(200).send(items[randomIndex]);
+    }
+    catch (error) {
+        res.status(500).send(error.message)
+    }
 });
-
 
 
 //GET hamsters by ID
@@ -91,7 +99,7 @@ router.post('/', async (req, res) => {
 });
 
 //PUT change or add
-//http://localhost:7777/hamsters/2w4gtJCakWDndyqXi7wI
+//http://localhost:1357/hamsters/2w4gtJCakWDndyqXi7wI
 router.put("/:id", async (req, res) => {
     const object = req.body;
     const id = req.params.id;
@@ -128,7 +136,7 @@ router.put("/:id", async (req, res) => {
 
 
 //DELETE by id
-//http://localhost:7777/hamsters/2w4gtJCakWDndyqXi7wI
+//http://localhost:1357/hamsters/2w4gtJCakWDndyqXi7wI
 router.delete('/:id', async (req, res) => {
     const id = req.params.id
 
