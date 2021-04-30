@@ -8,3 +8,17 @@ button {
   display: inline-block;
   font-size: 16px;
 }
+h1 {
+	font-size: 4em;
+	font-family: fantasy;
+	letter-spacing: 9px;
+}
+img {
+	height: 300px;
+}
+*{
+	text-align: center;
+}
+.hamster {
+	height: 355px
+}
