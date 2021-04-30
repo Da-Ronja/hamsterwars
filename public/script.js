@@ -19,7 +19,7 @@
 const button = document.querySelector('#randomButton')
 
 button.addEventListener('click', event => {
- 	const url = 'https://fue20-hamsterwars.herokuapp.com//hamsters/random';
+ 	const url = 'https://fue20-hamsterwars.herokuapp.com/hamsters/random';
 
 	getData(url, showHamster);
 
